@@ -1,0 +1,209 @@
+/*
+Theme Name: MCQ Home
+Theme URI: https://mcqhome.com
+Author: You
+Version: 1.0
+Description: A custom theme for MCQ-based content and community.
+*/
+
+/* style.css */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f2f5;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header, footer {
+  background: #1e293b;
+  color: #fff;
+  padding: 1em;
+  text-align: center;
+}
+
+main {
+  max-width: 800px;
+  margin: 2em auto;
+  padding: 1em;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+article {
+  margin-bottom: 2em;
+}
+
+.mcq-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.mcq-option:hover {
+  background-color: #eef6ff;
+}
+
+.option-label-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0077cc;
+  color: #fff;
+  font-weight: bold;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+.option-text {
+  font-size: 1rem;
+  color: #333;
+}
+
+
+.mcq-option:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.mcq-feedback {
+  font-size: 18px;
+  margin-top: 12px;
+}
+
+.mcq-explanation {
+  background-color: #fef9c3;
+  padding: 12px;
+  border-left: 4px solid #facc15;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.wp-ulike-btn {
+  margin-top: 20px;
+  display: inline-block;
+  padding: 8px 16px;
+  background: #0ea5e9;
+  color: #fff !important;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.wp-ulike-btn:hover {
+  background: #0284c7;
+}
+
+.wpulike {
+	padding: 0;
+	display: flex;
+	gap: 5px;
+}
+
+.wpulike-robeen .count-box {
+    font-weight: 700;
+    padding: 0 5px;
+    font-size: 18px;
+}
+
+.wp_ulike_is_unliked,
+.wp_ulike_is_liked {
+	padding: 9px 0 8px 0;
+}
+
+.comment-toggle-wrapper {
+  margin-top: 20px;
+}
+
+.toggle-comments-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.toggle-comments-btn:hover {
+  background: #e2e8f0;
+}
+
+.comments-container {
+  margin-top: 15px;
+  padding: 10px;
+  border-left: 3px solid #94a3b8;
+  background: #f8fafc;
+  border-radius: 6px;
+}
+
+.show-more-comments {
+  display: inline-block;
+  margin-top: 10px;
+  color: #0ea5e9;
+  text-decoration: none;
+}
+.show-more-comments:hover {
+  text-decoration: underline;
+}
+
+.interaction-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px 0 rgba(0, 0, 0, 0.1);
+  background-color: #f8fafc;
+}
+
+.ulike-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.comment-toggle-wrapper .toggle-comments-btn {
+  background: #e0f2fe;
+  border: 1px solid #0284c7;
+  color: #0284c7;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.comment-toggle-wrapper .toggle-comments-btn:hover {
+  background: #bae6fd;
+}
+
+.comments-container {
+/*   margin-top: 10px;
+  padding: 15px; */
+  background: #f1f5f9;
+  border-radius: 8px;
+}
+
+.show-more-comments {
+  display: inline-block;
+  margin-top: 10px;
+  color: #0284c7;
+  text-decoration: none;
+}
+.show-more-comments:hover {
+  text-decoration: underline;
+}
