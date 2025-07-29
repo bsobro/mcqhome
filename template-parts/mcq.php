@@ -1,4 +1,4 @@
-<?php if (get_post_type() === 'post') : ?>
+<?php if (get_post_type() === 'mcq_question') : ?>
 
 <?php
 if (function_exists('get_field')) :
