@@ -79,32 +79,43 @@ get_header(); ?>
             $subject_topics = get_terms([
               'taxonomy' => 'mcq_topic',
               'hide_empty' => true,
-              'object_ids' => get_posts([
+              'object_ids' => null
+            ]);
+            
+            // Filter topics that have questions in this subject
+            $relevant_topics = array_filter($subject_topics, function($topic) use ($subject) {
+              $query = new WP_Query([
                 'post_type' => 'mcq_question',
-                'posts_per_page' => -1,
-                'fields' => 'ids',
+                'posts_per_page' => 1,
                 'tax_query' => [
+                  'relation' => 'AND',
                   [
                     'taxonomy' => 'mcq_subject',
                     'field' => 'term_id',
                     'terms' => $subject->term_id
+                  ],
+                  [
+                    'taxonomy' => 'mcq_topic',
+                    'field' => 'term_id',
+                    'terms' => $topic->term_id
                   ]
                 ]
-              ])
-            ]);
+              ]);
+              return $query->found_posts > 0;
+            });
             
-            if (!empty($subject_topics) && !is_wp_error($subject_topics)) : ?>
+            if (!empty($relevant_topics)) : ?>
               <div class="subject-topics">
                 <h4>Topics:</h4>
                 <div class="topic-tags">
-                  <?php foreach (array_slice($subject_topics, 0, 8) as $topic) : ?>
+                  <?php foreach (array_slice($relevant_topics, 0, 8) as $topic) : ?>
                     <a href="<?php echo get_term_link($topic); ?>" class="topic-tag">
                       <?php echo esc_html($topic->name); ?>
                       <span class="topic-count">(<?php echo $topic->count; ?>)</span>
                     </a>
                   <?php endforeach; ?>
-                  <?php if (count($subject_topics) > 8) : ?>
-                    <span class="more-topics">+<?php echo count($subject_topics) - 8; ?> more</span>
+                  <?php if (count($relevant_topics) > 8) : ?>
+                    <span class="more-topics">+<?php echo count($relevant_topics) - 8; ?> more</span>
                   <?php endif; ?>
                 </div>
               </div>
@@ -114,26 +125,36 @@ get_header(); ?>
             <?php
             $difficulties = get_terms([
               'taxonomy' => 'mcq_difficulty',
-              'hide_empty' => true,
-              'object_ids' => get_posts([
+              'hide_empty' => true
+            ]);
+            
+            // Filter difficulties that have questions in this subject
+            $relevant_difficulties = array_filter($difficulties, function($difficulty) use ($subject) {
+              $query = new WP_Query([
                 'post_type' => 'mcq_question',
-                'posts_per_page' => -1,
-                'fields' => 'ids',
+                'posts_per_page' => 1,
                 'tax_query' => [
+                  'relation' => 'AND',
                   [
                     'taxonomy' => 'mcq_subject',
                     'field' => 'term_id',
                     'terms' => $subject->term_id
+                  ],
+                  [
+                    'taxonomy' => 'mcq_difficulty',
+                    'field' => 'term_id',
+                    'terms' => $difficulty->term_id
                   ]
                 ]
-              ])
-            ]);
+              ]);
+              return $query->found_posts > 0;
+            });
             
-            if (!empty($difficulties) && !is_wp_error($difficulties)) : ?>
+            if (!empty($relevant_difficulties)) : ?>
               <div class="subject-difficulties">
                 <h4>Difficulty Levels:</h4>
                 <div class="difficulty-tags">
-                  <?php foreach ($difficulties as $difficulty) : ?>
+                  <?php foreach ($relevant_difficulties as $difficulty) : ?>
                     <span class="difficulty-tag difficulty-<?php echo esc_attr($difficulty->slug); ?>">
                       <?php echo esc_html($difficulty->name); ?>
                       <span class="difficulty-count">(<?php echo $difficulty->count; ?>)</span>
@@ -154,9 +175,9 @@ get_header(); ?>
           </div>
           
         <?php endforeach; ?>
-      else :
-        echo '<p>No subjects found.</p>';
-      endif;
+      <?php else : ?>
+        <p>No subjects found.</p>
+      <?php endif; ?>
       ?>
     </section>
 
