@@ -14,7 +14,7 @@ function mcqhome_setup() {
 add_action('after_setup_theme', 'mcqhome_setup');
 
 function mcqhome_enqueue() {
-  wp_enqueue_style('mcqhome-style', get_stylesheet_uri());
+  wp_enqueue_style('mcqhome-style', get_stylesheet_uri(), [], wp_get_theme()->get('Version'));
 }
 add_action('wp_enqueue_scripts', 'mcqhome_enqueue');
 

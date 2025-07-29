@@ -597,14 +597,16 @@ article {
   }
 }
 
-/* MCQ Quiz Container Styles */
+/* MCQ Quiz Container Styles - Force Apply */
 .mcq-quiz-container {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: white !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 2rem !important;
+  margin-bottom: 2rem !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  display: block !important;
+  max-width: 100% !important;
 }
 
 .question-meta {
@@ -792,6 +794,69 @@ article {
     flex-direction: column;
     gap: 0.5rem;
   }
+}
+
+/* Debug and Fallback Styles */
+.mcq-quiz-container {
+  background: white;
+  border: 2px solid #3b82f6;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.question-title {
+  color: #1e293b;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.mcq-option {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.mcq-option:hover {
+  background: #e2e8f0;
+  border-color: #3b82f6;
+}
+
+.mcq-option.correct {
+  background: #dcfce7;
+  border-color: #22c55e;
+  color: #166534;
+}
+
+.mcq-option.incorrect {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #991b1b;
+}
+
+.question-meta {
+  margin-bottom: 1rem;
+}
+
+.question-subject,
+.question-topic {
+  display: inline-block;
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
 }
 
 /* Regular Post Styles */
