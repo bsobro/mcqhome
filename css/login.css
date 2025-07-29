@@ -1,0 +1,107 @@
+/* Custom Login Styles for MCQ Hub */
+.login {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+#login {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.login h1 a {
+    background-image: none, url('../images/logo.png');
+    background-size: contain;
+    width: 200px;
+    height: 60px;
+    margin-bottom: 20px;
+}
+
+.login form {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+.login form .input,
+.login form input[type="checkbox"],
+.login input[type="text"],
+.login input[type="password"] {
+    border: 1px solid #e1e1e1;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    padding: 12px;
+    width: 100%;
+    transition: border-color 0.3s ease;
+}
+
+.login form .input:focus,
+.login input[type="text"]:focus,
+.login input[type="password"]:focus {
+    border-color: #667eea;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.wp-core-ui .button-primary {
+    background: #667eea;
+    border-color: #667eea;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 24px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.wp-core-ui .button-primary:hover {
+    background: #5a6fd8;
+    border-color: #5a6fd8;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.login #nav,
+.login #backtoblog {
+    font-size: 14px;
+    padding: 0;
+    text-align: center;
+}
+
+.login #nav a,
+.login #backtoblog a {
+    color: #667eea;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.login #nav a:hover,
+.login #backtoblog a:hover {
+    color: #5a6fd8;
+}
+
+/* Registration form styles */
+.login label {
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+}
+
+@media screen and (max-width: 768px) {
+    #login {
+        margin: 20px;
+        padding: 30px 20px;
+    }
+}

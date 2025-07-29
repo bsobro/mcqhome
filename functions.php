@@ -1,4 +1,9 @@
 <?php
+// Include Phase 2 features
+require_once get_template_directory() . '/user-progress.php';
+require_once get_template_directory() . '/advanced-search.php';
+require_once get_template_directory() . '/gamification.php';
+
 function mcqhome_setup() {
   add_theme_support('title-tag');
   add_theme_support('post-thumbnails');
@@ -14,7 +19,7 @@ function mcqhome_enqueue() {
 add_action('wp_enqueue_scripts', 'mcqhome_enqueue');
 
 // Phase 1: Custom Post Type and Taxonomies for MCQ Hub
-function mcqhome_register_post_types() {
+function mcqhome_register_post_types() { // Phase 1 implementation
   // Register MCQ Question Post Type
   register_post_type('mcq_question', [
     'labels' => [
