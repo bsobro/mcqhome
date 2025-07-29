@@ -207,3 +207,231 @@ article {
 .show-more-comments:hover {
   text-decoration: underline;
 }
+
+/* MCQ Hub Styles */
+.mcq-hub-hero {
+    background: linear-gradient(135deg, #0077cc 0%, #005fa3 100%);
+    color: white;
+    padding: 60px 0;
+    text-align: center;
+}
+
+.mcq-hub-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.mcq-hub-hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.filter-section {
+    background: white;
+    padding: 30px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-form {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.filter-form select,
+.filter-form input {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    min-width: 150px;
+}
+
+.filter-form button {
+    background: #0077cc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.filter-form button:hover {
+    background: #005fa3;
+}
+
+.quick-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 120px;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0077cc;
+    display: block;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.questions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+    margin: 40px 0;
+}
+
+.mcq-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.mcq-card:hover {
+    transform: translateY(-2px);
+}
+
+.mcq-card-header {
+    padding: 20px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.mcq-card-subject {
+    font-size: 0.875rem;
+    color: #0077cc;
+    font-weight: 600;
+}
+
+.mcq-card-exam {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.mcq-card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 10px 0;
+    line-height: 1.4;
+}
+
+.mcq-card-meta {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.mcq-card-meta span {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.mcq-card-body {
+    padding: 20px;
+}
+
+.mcq-card-question {
+    color: #374151;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.mcq-card-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.mcq-card-actions {
+    padding: 20px;
+    border-top: 1px solid #f1f5f9;
+    text-align: center;
+}
+
+.mcq-card-actions a {
+    background: #0077cc;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.mcq-card-actions a:hover {
+    background: #005fa3;
+}
+
+.pagination {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.pagination a,
+.pagination span {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #0077cc;
+}
+
+.pagination .current {
+    background: #0077cc;
+    color: white;
+    border-color: #0077cc;
+}
+
+@media (max-width: 768px) {
+    .mcq-hub-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-form select,
+    .filter-form input,
+    .filter-form button {
+        width: 100%;
+    }
+    
+    .questions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-stats {
+        flex-direction: column;
+        align-items: center;
+    }
+}
