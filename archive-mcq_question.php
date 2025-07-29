@@ -99,14 +99,14 @@
       </div>
     </section>
 
-    <!-- Questions Grid -->
-    <section class="questions-grid">
+    <!-- Interactive MCQ Section -->
+    <section class="interactive-mcq-section">
       <?php
       $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
       
       $args = [
         'post_type' => 'mcq_question',
-        'posts_per_page' => 12,
+        'posts_per_page' => 5,
         'paged' => $paged
       ];
 
@@ -146,9 +146,9 @@
       $questions = new WP_Query($args);
 
       if ($questions->have_posts()) :
-        echo '<div class="questions-list">';
+        echo '<div class="interactive-questions-list">';
         while ($questions->have_posts()) : $questions->the_post();
-          get_template_part('template-parts/mcq-card');
+          get_template_part('template-parts/mcq');
         endwhile;
         echo '</div>';
 
