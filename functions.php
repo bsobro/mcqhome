@@ -15,8 +15,30 @@ add_action('after_setup_theme', 'mcqhome_setup');
 
 function mcqhome_enqueue() {
   wp_enqueue_style('mcqhome-style', get_stylesheet_uri(), [], wp_get_theme()->get('Version'));
+  wp_enqueue_style('mcqhome-login', get_template_directory_uri() . '/login.css');
+  wp_enqueue_script('mcqhome-header', get_template_directory_uri() . '/js/header.js', [], '1.0.0', true);
 }
 add_action('wp_enqueue_scripts', 'mcqhome_enqueue');
+
+// Fallback menu function
+function mcqhome_fallback_menu() {
+    echo '<ul class="nav-menu fallback-menu">';
+    echo '<li><a href="' . esc_url(home_url('/')) . '">Home</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/subjects')) . '">Subjects</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/questions')) . '">Questions</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/leaderboard')) . '">Leaderboard</a></li>';
+    echo '</ul>';
+}
+
+// Mobile fallback menu function
+function mcqhome_fallback_mobile_menu() {
+    echo '<ul class="mobile-nav-menu">';
+    echo '<li><a href="' . esc_url(home_url('/')) . '">Home</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/subjects')) . '">Subjects</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/questions')) . '">Questions</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/leaderboard')) . '">Leaderboard</a></li>';
+    echo '</ul>';
+}
 
 // Phase 1: Custom Post Type and Taxonomies for MCQ Hub
 function mcqhome_register_post_types() { // Phase 1 implementation
