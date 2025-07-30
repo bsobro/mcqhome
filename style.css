@@ -565,7 +565,7 @@ main {
 
 @media (max-width: 1280px) {
   main {
-    margin: 1em auto;
+    margin: 1em;
   }
 }
 
