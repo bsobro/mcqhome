@@ -3,14 +3,23 @@
 require_once get_template_directory() . '/user-progress.php';
 require_once get_template_directory() . '/advanced-search.php';
 require_once get_template_directory() . '/gamification.php';
+require_once get_template_directory() . '/quiz-management.php';
+
+// Include quiz AJAX handlers
+require_once get_template_directory() . '/quiz-ajax.php';
 
 function mcqhome_setup()
 {
   add_theme_support('title-tag');
   add_theme_support('post-thumbnails');
+  add_theme_support('html5', ['search-form', 'comment-form', 'comment-list', 'gallery', 'caption']);
   register_nav_menus([
-    'main-menu' => 'Main Menu'
+    'primary' => __('Primary Menu', 'mcqhome'),
   ]);
+  
+  // Add image sizes for quizzes
+  add_image_size('quiz-thumbnail', 300, 200, true);
+  add_image_size('quiz-featured', 800, 400, true);
 }
 add_action('after_setup_theme', 'mcqhome_setup');
 
@@ -19,6 +28,19 @@ function mcqhome_enqueue()
   wp_enqueue_style('mcqhome-style', get_stylesheet_uri(), [], wp_get_theme()->get('Version'));
   wp_enqueue_style('mcqhome-login', get_template_directory_uri() . '/login.css');
   wp_enqueue_script('mcqhome-header', get_template_directory_uri() . '/js/header.js', [], '1.0.0', true);
+  
+  // Enqueue quiz management scripts
+    wp_enqueue_style('quiz-management', get_template_directory_uri() . '/quiz-management.css', [], '1.0.0');
+    wp_enqueue_style('quiz-styles', get_template_directory_uri() . '/css/quiz-styles.css', [], '1.0.0');
+    wp_enqueue_script('quiz-management', get_template_directory_uri() . '/quiz-management.js', ['jquery'], '1.0.0', true);
+  
+  // Localize AJAX
+  wp_localize_script('quiz-management', 'mcqhome_ajax', [
+    'ajax_url' => admin_url('admin-ajax.php'),
+    'is_logged_in' => is_user_logged_in() ? '1' : '0',
+    'login_url' => wp_login_url(),
+    'register_url' => wp_registration_url(),
+  ]);
 }
 add_action('wp_enqueue_scripts', 'mcqhome_enqueue');
 
