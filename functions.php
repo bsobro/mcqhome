@@ -4,7 +4,8 @@ require_once get_template_directory() . '/user-progress.php';
 require_once get_template_directory() . '/advanced-search.php';
 require_once get_template_directory() . '/gamification.php';
 
-function mcqhome_setup() {
+function mcqhome_setup()
+{
   add_theme_support('title-tag');
   add_theme_support('post-thumbnails');
   register_nav_menus([
@@ -13,7 +14,8 @@ function mcqhome_setup() {
 }
 add_action('after_setup_theme', 'mcqhome_setup');
 
-function mcqhome_enqueue() {
+function mcqhome_enqueue()
+{
   wp_enqueue_style('mcqhome-style', get_stylesheet_uri(), [], wp_get_theme()->get('Version'));
   wp_enqueue_style('mcqhome-login', get_template_directory_uri() . '/login.css');
   wp_enqueue_script('mcqhome-header', get_template_directory_uri() . '/js/header.js', [], '1.0.0', true);
@@ -21,27 +23,30 @@ function mcqhome_enqueue() {
 add_action('wp_enqueue_scripts', 'mcqhome_enqueue');
 
 // Fallback menu function
-function mcqhome_fallback_menu() {
-    echo '<ul class="nav-menu fallback-menu">';
-    echo '<li><a href="' . esc_url(home_url('/')) . '">MCQ Home</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/subjects')) . '">Subjects</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/questions')) . '">Questions</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/leaderboard')) . '">Leaderboard</a></li>';
-    echo '</ul>';
+function mcqhome_fallback_menu()
+{
+  echo '<ul class="nav-menu fallback-menu">';
+  // echo '<li><a href="' . esc_url(home_url('/')) . '">MCQ Home</a></li>';
+  echo '<li><a href="' . esc_url(home_url('/subjects')) . '">Subjects</a></li>';
+  echo '<li><a href="' . esc_url(home_url('/questions')) . '">Questions</a></li>';
+  echo '<li><a href="' . esc_url(home_url('/leaderboard')) . '">Leaderboard</a></li>';
+  echo '</ul>';
 }
 
 // Mobile fallback menu function
-function mcqhome_fallback_mobile_menu() {
-    echo '<ul class="mobile-nav-menu">';
-    echo '<li><a href="' . esc_url(home_url('/')) . '">MCQ Home</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/subjects')) . '">Subjects</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/questions')) . '">Questions</a></li>';
-    echo '<li><a href="' . esc_url(home_url('/leaderboard')) . '">Leaderboard</a></li>';
-    echo '</ul>';
+function mcqhome_fallback_mobile_menu()
+{
+  echo '<ul class="mobile-nav-menu">';
+  // echo '<li><a href="' . esc_url(home_url('/')) . '">MCQ Home</a></li>';
+  echo '<li><a href="' . esc_url(home_url('/subjects')) . '">Subjects</a></li>';
+  echo '<li><a href="' . esc_url(home_url('/questions')) . '">Questions</a></li>';
+  echo '<li><a href="' . esc_url(home_url('/leaderboard')) . '">Leaderboard</a></li>';
+  echo '</ul>';
 }
 
 // Phase 1: Custom Post Type and Taxonomies for MCQ Hub
-function mcqhome_register_post_types() { // Phase 1 implementation
+function mcqhome_register_post_types()
+{ // Phase 1 implementation
   // Register MCQ Question Post Type
   register_post_type('mcq_question', [
     'labels' => [
@@ -66,7 +71,8 @@ function mcqhome_register_post_types() { // Phase 1 implementation
 }
 add_action('init', 'mcqhome_register_post_types');
 
-function mcqhome_register_taxonomies() {
+function mcqhome_register_taxonomies()
+{
   // Register Subjects Taxonomy
   register_taxonomy('mcq_subject', ['mcq_question'], [
     'labels' => [
@@ -154,8 +160,9 @@ function mcqhome_register_taxonomies() {
 add_action('init', 'mcqhome_register_taxonomies');
 
 // Add custom fields for MCQ Questions
-function mcqhome_add_custom_fields() {
-  if( function_exists('acf_add_local_field_group') ) {
+function mcqhome_add_custom_fields()
+{
+  if (function_exists('acf_add_local_field_group')) {
     acf_add_local_field_group([
       'key' => 'group_mcq_fields',
       'title' => 'MCQ Details',
@@ -238,7 +245,8 @@ function mcqhome_add_custom_fields() {
 add_action('acf/init', 'mcqhome_add_custom_fields');
 
 // Add custom rewrite rules for filtering
-function mcqhome_rewrite_rules() {
+function mcqhome_rewrite_rules()
+{
   add_rewrite_rule('^questions/subject/([^/]+)/?', 'index.php?mcq_subject=$matches[1]', 'top');
   add_rewrite_rule('^questions/exam/([^/]+)/?', 'index.php?mcq_exam=$matches[1]', 'top');
   add_rewrite_rule('^questions/topic/([^/]+)/?', 'index.php?mcq_topic=$matches[1]', 'top');
@@ -247,7 +255,8 @@ function mcqhome_rewrite_rules() {
 add_action('init', 'mcqhome_rewrite_rules');
 
 // Add query vars for filtering
-function mcqhome_query_vars($vars) {
+function mcqhome_query_vars($vars)
+{
   $vars[] = 'mcq_subject';
   $vars[] = 'mcq_exam';
   $vars[] = 'mcq_topic';
@@ -255,4 +264,3 @@ function mcqhome_query_vars($vars) {
   return $vars;
 }
 add_filter('query_vars', 'mcqhome_query_vars');
-?>
