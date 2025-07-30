@@ -23,7 +23,7 @@ add_action('wp_enqueue_scripts', 'mcqhome_enqueue');
 // Fallback menu function
 function mcqhome_fallback_menu() {
     echo '<ul class="nav-menu fallback-menu">';
-    echo '<li><a href="' . esc_url(home_url('/')) . '">Home</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/')) . '">MCQ Home</a></li>';
     echo '<li><a href="' . esc_url(home_url('/subjects')) . '">Subjects</a></li>';
     echo '<li><a href="' . esc_url(home_url('/questions')) . '">Questions</a></li>';
     echo '<li><a href="' . esc_url(home_url('/leaderboard')) . '">Leaderboard</a></li>';
@@ -33,7 +33,7 @@ function mcqhome_fallback_menu() {
 // Mobile fallback menu function
 function mcqhome_fallback_mobile_menu() {
     echo '<ul class="mobile-nav-menu">';
-    echo '<li><a href="' . esc_url(home_url('/')) . '">Home</a></li>';
+    echo '<li><a href="' . esc_url(home_url('/')) . '">MCQ Home</a></li>';
     echo '<li><a href="' . esc_url(home_url('/subjects')) . '">Subjects</a></li>';
     echo '<li><a href="' . esc_url(home_url('/questions')) . '">Questions</a></li>';
     echo '<li><a href="' . esc_url(home_url('/leaderboard')) . '">Leaderboard</a></li>';

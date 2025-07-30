@@ -20,7 +20,7 @@
     <div class="site-branding">
       <h1 class="site-title">
         <a href="<?php echo home_url(); ?>" rel="home">
-          <span class="logo-text">MCQ Hub</span>
+          <span class="logo-text">MCQ Home</span>
           <span class="logo-tagline">Master Your Knowledge</span>
         </a>
       </h1>
