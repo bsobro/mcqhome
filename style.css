@@ -564,11 +564,15 @@ main {
 }
 
 @media (max-width: 1280px) {
-  margin: 1em auto;
+  main {
+    margin: 1em auto;
+  }
 }
 
 @media (min-width: 1280px) {
-  margin: 2em auto;
+  main {
+    margin: 2em auto;
+  }
 }
 
 article {
