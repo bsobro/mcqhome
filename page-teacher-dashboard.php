@@ -3,8 +3,6 @@
  * Template Name: Teacher Dashboard
  */
 
-get_header(); 
-
 if (!is_user_logged_in()) {
     wp_redirect(wp_login_url(get_permalink()));
     exit;
@@ -20,6 +18,16 @@ $teacher_id = $user->ID;
 
 // Include registration redirect functions
 require_once get_template_directory() . '/registration-redirect.php';
+
+?><!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo('charset'); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php wp_title('|', true, 'right'); ?></title>
+    <?php wp_head(); ?>
+</head>
+<body <?php body_class('dashboard-template'); ?>>
 
 // Get teacher's quizzes
 $quizzes = new WP_Query([
@@ -327,221 +335,8 @@ $revenue_stats = get_revenue_stats($teacher_id);
     </div>
 </div>
 
-<style>
-.teacher-dashboard {
-    background: #f8f9fa;
-    min-height: 100vh;
-}
 
-.dashboard-header {
-    background: #007cba;
-    color: white;
-    padding: 40px 0;
-    text-align: center;
-}
 
-.dashboard-header h1 {
-    margin: 0 0 10px 0;
-    font-size: 36px;
-}
-
-.dashboard-stats {
-    padding: 40px 0;
-    background: white;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.stat-card {
-    display: flex;
-    align-items: center;
-    padding: 30px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.stat-icon {
-    font-size: 48px;
-    margin-right: 20px;
-}
-
-.stat-content h3 {
-    margin: 0;
-    font-size: 32px;
-    color: #007cba;
-}
-
-.stat-content p {
-    margin: 5px 0 0 0;
-    color: #666;
-}
-
-.dashboard-content {
-    padding: 40px 0;
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.dashboard-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.dashboard-nav a {
-    display: block;
-    padding: 15px 20px;
-    color: #333;
-    text-decoration: none;
-    border-radius: 4px;
-    margin-bottom: 5px;
-    transition: all 0.3s;
-}
-
-.dashboard-nav a:hover,
-.dashboard-nav a.active {
-    background: #007cba;
-    color: white;
-}
-
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
-}
-
-.quiz-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.quiz-meta {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.quiz-status {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.quiz-status.publish {
-    background: #d4edda;
-    color: #155724;
-}
-
-.quiz-status.draft {
-    background: #fff3cd;
-    color: #856404;
-}
-
-.quiz-type {
-    background: #e9ecef;
-    color: #495057;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-}
-
-.quiz-stats {
-    text-align: center;
-}
-
-.stat-value {
-    display: block;
-    font-size: 24px;
-    font-weight: bold;
-    color: #007cba;
-}
-
-.stat-label {
-    font-size: 12px;
-    color: #666;
-}
-
-.activity-item {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    background: white;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-.activity-icon {
-    font-size: 24px;
-    margin-right: 15px;
-}
-
-.activity-time {
-    color: #666;
-    font-size: 12px;
-}
-
-@media (max-width: 768px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .dashboard-sidebar {
-        order: 2;
-    }
-    
-    .quiz-item {
-        flex-direction: column;
-        align-items: stretch;
-        text-align: center;
-    }
-    
-    .quiz-actions {
-        margin-top: 15px;
-    }
-}
-</style>
-
-<script>
-jQuery(document).ready(function($) {
-    // Tab switching
-    $('.dashboard-nav a').on('click', function(e) {
-        e.preventDefault();
-        
-        const tab = $(this).data('tab');
-        
-        // Update active nav
-        $('.dashboard-nav a').removeClass('active');
-        $(this).addClass('active');
-        
-        // Update active tab content
-        $('.tab-content').removeClass('active');
-        $(`#${tab}-tab`).addClass('active');
-    });
-});
-</script>
-
-<?php get_footer(); ?>
+<?php wp_footer(); ?>
+</body>
+</html>

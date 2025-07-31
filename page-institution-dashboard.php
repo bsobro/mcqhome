@@ -3,8 +3,6 @@
  * Template Name: Institution Dashboard
  */
 
-get_header(); 
-
 if (!is_user_logged_in()) {
     wp_redirect(wp_login_url(get_permalink()));
     exit;
@@ -20,6 +18,16 @@ $institution_id = $user->ID;
 
 // Include registration redirect functions
 require_once get_template_directory() . '/registration-redirect.php';
+
+?><!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo('charset'); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php wp_title('|', true, 'right'); ?></title>
+    <?php wp_head(); ?>
+</head>
+<body <?php body_class('dashboard-template'); ?>>
 
 // Get all teachers in the institution
 $teachers = get_users([
@@ -542,278 +550,6 @@ $revenue_stats = get_institution_revenue_stats($teacher_ids);
     </div>
 </div>
 
-<style>
-.institution-dashboard {
-    background: #f8f9fa;
-    min-height: 100vh;
-}
-
-.dashboard-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 2rem 0;
-    margin-bottom: 2rem;
-}
-
-.dashboard-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.dashboard-stats {
-    margin-bottom: 2rem;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-}
-
-.stat-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.stat-icon {
-    font-size: 2rem;
-}
-
-.stat-content h3 {
-    font-size: 1.8rem;
-    margin: 0;
-    color: #333;
-}
-
-.stat-content p {
-    margin: 0;
-    color: #666;
-}
-
-.dashboard-content {
-    padding: 2rem 0;
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 2rem;
-}
-
-.dashboard-sidebar {
-    background: white;
-    border-radius: 8px;
-    padding: 1rem;
-    height: fit-content;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.dashboard-nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.dashboard-nav a {
-    display: block;
-    padding: 0.75rem 1rem;
-    color: #333;
-    text-decoration: none;
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
-    transition: all 0.3s ease;
-}
-
-.dashboard-nav a:hover,
-.dashboard-nav a.active {
-    background: #667eea;
-    color: white;
-}
-
-.dashboard-main {
-    background: white;
-    border-radius: 8px;
-    padding: 2rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
-}
-
-.teachers-table,
-.quizzes-table,
-.students-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-.teachers-table th,
-.quizzes-table th,
-.students-table th {
-    background: #f8f9fa;
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 2px solid #dee2e6;
-}
-
-.teachers-table td,
-.quizzes-table td,
-.students-table td {
-    padding: 1rem;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.btn {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background: #667eea;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.btn:hover {
-    background: #5a6fd8;
-}
-
-.btn-secondary {
-    background: #6c757d;
-}
-
-.btn-secondary:hover {
-    background: #5a6268;
-}
-
-.btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-}
-
-.quick-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.analytics-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin: 1rem 0;
-}
-
-.analytics-card {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.analytics-card h4 {
-    margin: 0 0 0.5rem 0;
-    color: #666;
-}
-
-.analytics-card p {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 0;
-    color: #333;
-}
-
-.charts-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.chart-placeholder {
-    background: #f8f9fa;
-    padding: 2rem;
-    border-radius: 8px;
-    text-align: center;
-    border: 2px dashed #dee2e6;
-}
-
-.settings-form {
-    max-width: 500px;
-}
-
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-@media (max-width: 768px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .dashboard-sidebar {
-        order: 2;
-    }
-    
-    .charts-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .quick-actions {
-        flex-direction: column;
-    }
-}
-</style>
-
-<script>
-jQuery(document).ready(function($) {
-    // Tab switching
-    $('.dashboard-nav a').on('click', function(e) {
-        e.preventDefault();
-        
-        var tabId = $(this).data('tab');
-        
-        // Remove active class from all tabs and content
-        $('.dashboard-nav a').removeClass('active');
-        $('.tab-content').removeClass('active');
-        
-        // Add active class to clicked tab and corresponding content
-        $(this).addClass('active');
-        $('#' + tabId + '-tab').addClass('active');
-    });
-});
-</script>
-
-<?php get_footer(); ?>
+<?php wp_footer(); ?>
+</body>
+</html>

@@ -3,8 +3,6 @@
  * Template Name: Student Dashboard
  */
 
-get_header(); 
-
 if (!is_user_logged_in()) {
     wp_redirect(wp_login_url(get_permalink()));
     exit;
@@ -20,6 +18,16 @@ $student_id = $user->ID;
 
 // Include registration redirect functions
 require_once get_template_directory() . '/registration-redirect.php';
+
+?><!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo('charset'); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php wp_title('|', true, 'right'); ?></title>
+    <?php wp_head(); ?>
+</head>
+<body <?php body_class('dashboard-template'); ?>>
 
 // Get student's enrollments
 $enrollments = new WP_Query([
@@ -649,25 +657,6 @@ $achievements = get_student_achievements($student_id);
         margin: 15px 0;
     }
 }
-</style>
-
-<script>
-jQuery(document).ready(function($) {
-    // Tab switching
-    $('.dashboard-nav a').on('click', function(e) {
-        e.preventDefault();
-        
-        const tab = $(this).data('tab');
-        
-        // Update active nav
-        $('.dashboard-nav a').removeClass('active');
-        $(this).addClass('active');
-        
-        // Update active tab content
-        $('.tab-content').removeClass('active');
-        $(`#${tab}-tab`).addClass('active');
-    });
-});
-</script>
-
-<?php get_footer(); ?>
+<?php wp_footer(); ?>
+</body>
+</html>
