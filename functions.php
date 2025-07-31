@@ -14,6 +14,9 @@ new MCQHome_Roles_System();
 // Include quiz AJAX handlers
 require_once get_template_directory() . '/quiz-ajax.php';
 
+// Include demo data importer
+require_once get_template_directory() . '/demo-data-importer.php';
+
 function mcqhome_setup()
 {
   add_theme_support('title-tag');
