@@ -371,3 +371,6 @@ $achievements = mcqhome_get_student_achievements($student_id);
             </div>
         </div>
     </div>
+</div>
+
+<?php get_footer(); ?>
