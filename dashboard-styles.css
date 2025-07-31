@@ -325,37 +325,3 @@
         font-size: 1.5rem;
     }
 }
-
-/* Dashboard Template Base Styles */
-body.dashboard-template {
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-.dashboard-template * {
-    box-sizing: border-box;
-}
-
-.dashboard-template .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-/* Ensure proper spacing for standalone dashboard */
-.dashboard-template .teacher-dashboard,
-.dashboard-template .student-dashboard,
-.dashboard-template .institution-dashboard {
-    min-height: 100vh;
-    background-color: #f8f9fa;
-}
-
-/* Reset margins for dashboard elements */
-.dashboard-template .dashboard-header,
-.dashboard-template .dashboard-stats,
-.dashboard-template .dashboard-content {
-    margin: 0;
-    padding: 0;
-}

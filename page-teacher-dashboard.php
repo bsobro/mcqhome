@@ -3,6 +3,8 @@
  * Template Name: Teacher Dashboard
  */
 
+get_header();
+
 if (!is_user_logged_in()) {
     wp_redirect(wp_login_url(get_permalink()));
     exit;
@@ -18,16 +20,6 @@ $teacher_id = $user->ID;
 
 // Include registration redirect functions
 require_once get_template_directory() . '/registration-redirect.php';
-
-?><!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-<head>
-    <meta charset="<?php bloginfo('charset'); ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php wp_title('|', true, 'right'); ?></title>
-    <?php wp_head(); ?>
-</head>
-<body <?php body_class('dashboard-template'); ?>>
 
 // Get teacher's quizzes
 $quizzes = new WP_Query([
@@ -333,10 +325,7 @@ $revenue_stats = get_revenue_stats($teacher_id);
             </div>
         </div>
     </div>
+
 </div>
 
-
-
-<?php wp_footer(); ?>
-</body>
-</html>
+<?php get_footer(); ?>
