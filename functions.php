@@ -5,6 +5,12 @@ require_once get_template_directory() . '/advanced-search.php';
 require_once get_template_directory() . '/gamification.php';
 require_once get_template_directory() . '/quiz-management.php';
 
+// Include roles system
+require_once get_template_directory() . '/roles-system.php';
+
+// Initialize roles system
+new MCQHome_Roles_System();
+
 // Include quiz AJAX handlers
 require_once get_template_directory() . '/quiz-ajax.php';
 
