@@ -221,18 +221,21 @@ function mcqhome_login_styles() {
 }
 add_action('login_enqueue_scripts', 'mcqhome_login_styles');
 
-// Add custom registration fields
+// Add custom registration fields - only for student registration
 function mcqhome_registration_form() {
-    ?>
-    <p>
-        <label for="user_grade">Grade/Level<br>
-        <input type="text" name="user_grade" id="user_grade" class="input" value="" size="25"></label>
-    </p>
-    <p>
-        <label for="user_interests">Subjects of Interest<br>
-        <input type="text" name="user_interests" id="user_interests" class="input" value="" size="25"></label>
-    </p>
-    <?php
+    // Only add these fields if not already handled by roles system
+    if (!did_action('roles_system_registration_form')) {
+        ?>
+        <p>
+            <label for="user_grade">Grade/Level<br>
+            <input type="text" name="user_grade" id="user_grade" class="input" value="" size="25"></label>
+        </p>
+        <p>
+            <label for="user_interests">Subjects of Interest<br>
+            <input type="text" name="user_interests" id="user_interests" class="input" value="" size="25"></label>
+        </p>
+        <?php
+    }
 }
 add_action('register_form', 'mcqhome_registration_form');
 

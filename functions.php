@@ -9,6 +9,7 @@ require_once get_template_directory() . '/quiz-management.php';
 require_once get_template_directory() . '/roles-system.php';
 require_once get_template_directory() . '/institution-approval.php';
 $roles_system = new MCQHome_Roles_System();
+$institution_approval = new MCQHome_Institution_Approval();
 
 // Include registration redirect system
 require_once get_template_directory() . '/registration-redirect.php';

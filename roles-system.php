@@ -181,6 +181,8 @@ class MCQHome_Roles_System {
      * Add role selection to registration form
      */
     public function add_registration_role_field() {
+        // Mark that roles system has handled registration form
+        do_action('roles_system_registration_form');
         wp_enqueue_style('mcq-roles-style', get_template_directory_uri() . '/css/roles.css');
         
         // Get approved institutions for teacher selection
@@ -343,16 +345,31 @@ class MCQHome_Roles_System {
      */
     private function notify_admin_institution_registration($user_id) {
         $user = get_user_by('id', $user_id);
+        if (!$user) {
+            return;
+        }
+        
         $admin_email = get_option('admin_email');
+        if (!$admin_email) {
+            return;
+        }
         
         $subject = 'New Institution Registration - Approval Required';
         $message = "A new institution has registered and requires approval:\n\n";
         $message .= "Username: " . $user->user_login . "\n";
         $message .= "Email: " . $user->user_email . "\n";
         $message .= "Display Name: " . $user->display_name . "\n\n";
-        $message .= "To approve this institution, please visit: " . admin_url('users.php') . "\n";
+        $message .= "To approve this institution, please visit: " . admin_url('users.php?page=institution-approvals') . "\n";
         
-        wp_mail($admin_email, $subject, $message);
+        // Add filter to ensure email is sent
+        add_filter('wp_mail_content_type', function() { return 'text/plain'; });
+        
+        $sent = wp_mail($admin_email, $subject, $message);
+        
+        // Log for debugging
+        if (!$sent) {
+            error_log('Failed to send institution approval email for user ID: ' . $user_id);
+        }
     }
     
     /**

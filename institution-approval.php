@@ -33,6 +33,31 @@ class MCQHome_Institution_Approval {
             'institution-approvals',
             [$this, 'render_approval_page']
         );
+        
+        // Add notice to users page if there are pending institutions
+        add_action('admin_notices', [$this, 'add_pending_notice']);
+    }
+    
+    /**
+     * Add notice to admin users page about pending institutions
+     */
+    public function add_pending_notice() {
+        if (get_current_screen()->id !== 'users') {
+            return;
+        }
+        
+        $pending_count = count(get_users([
+            'meta_key' => 'institution_approval_status',
+            'meta_value' => 'pending',
+            'number' => -1
+        ]));
+        
+        if ($pending_count > 0) {
+            echo '<div class="notice notice-warning is-dismissible">';
+            echo '<p><strong>' . sprintf('%d institution(s) are pending approval.', $pending_count) . '</strong></p>';
+            echo '<p><a href="' . admin_url('users.php?page=institution-approvals') . '" class="button button-primary">Review Pending Institutions</a></p>';
+            echo '</div>';
+        }
     }
     
     /**
