@@ -182,6 +182,14 @@ class MCQHome_Roles_System {
      */
     public function add_registration_role_field() {
         wp_enqueue_style('mcq-roles-style', get_template_directory_uri() . '/css/roles.css');
+        
+        // Get approved institutions for teacher selection
+        $approved_institutions = get_users([
+            'role' => 'mcq_institution',
+            'meta_key' => 'institution_approval_status',
+            'meta_value' => 'approved',
+            'number' => -1
+        ]);
         ?>
         <div class="mcq-role-selection">
             <p class="form-row">
@@ -193,7 +201,48 @@ class MCQHome_Roles_System {
                     <option value="mcq_institution">Institution (Manage teachers & quizzes)</option>
                 </select>
             </p>
+            
+            <div id="teacher-institution-selection" class="form-row" style="display: none;">
+                <label for="teacher_institution">Institution Affiliation:</label>
+                <select name="teacher_institution" id="teacher_institution">
+                    <option value="">Independent Teacher (MCQHome)</option>
+                    <?php foreach ($approved_institutions as $institution): ?>
+                        <option value="<?php echo esc_attr($institution->ID); ?>">
+                            <?php echo esc_html($institution->display_name); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            
+            <div id="institution-notice" class="form-row" style="display: none;">
+                <p class="notice notice-info">
+                    <strong>Note:</strong> Institution accounts require admin approval. You'll be able to access basic features as a student until approved.
+                </p>
+            </div>
         </div>
+        
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleSelect = document.getElementById('mcq_role');
+            const teacherInstitutionDiv = document.getElementById('teacher-institution-selection');
+            const institutionNotice = document.getElementById('institution-notice');
+            
+            roleSelect.addEventListener('change', function() {
+                const selectedRole = this.value;
+                
+                if (selectedRole === 'mcq_teacher') {
+                    teacherInstitutionDiv.style.display = 'block';
+                    institutionNotice.style.display = 'none';
+                } else if (selectedRole === 'mcq_institution') {
+                    teacherInstitutionDiv.style.display = 'none';
+                    institutionNotice.style.display = 'block';
+                } else {
+                    teacherInstitutionDiv.style.display = 'none';
+                    institutionNotice.style.display = 'none';
+                }
+            });
+        });
+        </script>
         <?php
     }
     
@@ -204,8 +253,106 @@ class MCQHome_Roles_System {
         if (isset($_POST['mcq_role'])) {
             $role = sanitize_text_field($_POST['mcq_role']);
             $user = new WP_User($user_id);
-            $user->set_role($role);
+            
+            // Handle institution approval
+            if ($role === 'mcq_institution') {
+                // Set institution as pending approval
+                update_user_meta($user_id, 'institution_approval_status', 'pending');
+                // Temporarily set as student until approved
+                $user->set_role('mcq_student');
+                
+                // Send notification to admin
+                $this->notify_admin_institution_registration($user_id);
+            } else {
+                $user->set_role($role);
+                
+                // Handle teacher institution assignment
+                if ($role === 'mcq_teacher') {
+                    $this->assign_teacher_to_institution($user_id);
+                }
+            }
         }
+    }
+    
+    /**
+     * Assign teacher to institution
+     */
+    private function assign_teacher_to_institution($teacher_id) {
+        $institution_id = isset($_POST['teacher_institution']) ? intval($_POST['teacher_institution']) : 0;
+        
+        if ($institution_id > 0) {
+            // Check if institution exists and is approved
+            $institution = get_user_by('id', $institution_id);
+            if ($institution && in_array('mcq_institution', $institution->roles)) {
+                $approval_status = get_user_meta($institution_id, 'institution_approval_status', true);
+                if ($approval_status === 'approved') {
+                    update_user_meta($teacher_id, 'institution_id', $institution_id);
+                    return;
+                }
+            }
+        }
+        
+        // Assign to default MCQHome institution
+        $default_institution = $this->get_or_create_default_institution();
+        if ($default_institution) {
+            update_user_meta($teacher_id, 'institution_id', $default_institution);
+        }
+    }
+    
+    /**
+     * Get or create default MCQHome institution
+     */
+    private function get_or_create_default_institution() {
+        $default_username = 'mcqhome_default_institution';
+        $default_email = 'admin@mcqhome.com';
+        
+        // Check if default institution exists
+        $user = get_user_by('login', $default_username);
+        if (!$user) {
+            $user = get_user_by('email', $default_email);
+        }
+        
+        if (!$user) {
+            // Create default institution
+            $user_id = wp_create_user($default_username, wp_generate_password(), $default_email);
+            if (!is_wp_error($user_id)) {
+                $user = new WP_User($user_id);
+                $user->set_role('mcq_institution');
+                
+                wp_update_user([
+                    'ID' => $user_id,
+                    'display_name' => 'MCQHome Default Institution',
+                    'first_name' => 'MCQHome',
+                    'last_name' => 'Default Institution'
+                ]);
+                
+                update_user_meta($user_id, 'institution_approval_status', 'approved');
+                update_user_meta($user_id, 'description', 'Default institution for independent teachers');
+                
+                return $user_id;
+            }
+        } elseif (in_array('mcq_institution', $user->roles)) {
+            return $user->ID;
+        }
+        
+        return 0;
+    }
+    
+    /**
+     * Notify admin about new institution registration
+     */
+    private function notify_admin_institution_registration($user_id) {
+        $user = get_user_by('id', $user_id);
+        $admin_email = get_option('admin_email');
+        
+        $subject = 'New Institution Registration - Approval Required';
+        $message = "A new institution has registered and requires approval:\n\n";
+        $message .= "Username: " . $user->user_login . "\n";
+        $message .= "Email: " . $user->user_email . "\n";
+        $message .= "Display Name: " . $user->display_name . "\n\n";
+        $message .= "To approve this institution, please visit: " . admin_url('users.php') . "\n";
+        
+        wp_mail($admin_email, $subject, $message);
     }
     
     /**

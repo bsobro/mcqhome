@@ -18,6 +18,60 @@ if (!in_array('mcq_institution', $user->roles)) {
 
 $institution_id = $user->ID;
 
+// Handle teacher creation
+if (isset($_POST['add_teacher'])) {
+    $username = sanitize_user($_POST['teacher_username']);
+    $email = sanitize_email($_POST['teacher_email']);
+    $first_name = sanitize_text_field($_POST['teacher_first_name']);
+    $last_name = sanitize_text_field($_POST['teacher_last_name']);
+    $password = $_POST['teacher_password'];
+    
+    // Validate inputs
+    if (empty($username) || empty($email) || empty($password)) {
+        $response = ['success' => false, 'message' => 'Please fill in all required fields.'];
+    } elseif (!is_email($email)) {
+        $response = ['success' => false, 'message' => 'Please enter a valid email address.'];
+    } elseif (username_exists($username)) {
+        $response = ['success' => false, 'message' => 'Username already exists. Please choose a different username.'];
+    } elseif (email_exists($email)) {
+        $response = ['success' => false, 'message' => 'Email already exists. Please use a different email address.'];
+    } elseif (strlen($password) < 6) {
+        $response = ['success' => false, 'message' => 'Password must be at least 6 characters.'];
+    } else {
+        // Create new teacher user
+        $user_id = wp_create_user($username, $password, $email);
+        
+        if (!is_wp_error($user_id)) {
+            // Set user role to teacher
+            $user = new WP_User($user_id);
+            $user->set_role('mcq_teacher');
+            
+            // Update user meta
+            update_user_meta($user_id, 'first_name', $first_name);
+            update_user_meta($user_id, 'last_name', $last_name);
+            update_user_meta($user_id, 'institution_id', $institution_id);
+            
+            $response = ['success' => true, 'message' => 'Teacher account created successfully!'];
+        } else {
+            $response = ['success' => false, 'message' => 'Error creating teacher account: ' . $user_id->get_error_message()];
+        }
+    }
+    
+    // Handle AJAX response
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+        wp_send_json($response);
+        exit;
+    } else {
+        // Handle regular form submission
+        if ($response['success']) {
+            echo '<div class="success-message">' . esc_html($response['message']) . '</div>';
+            echo '<meta http-equiv="refresh" content="2">';
+        } else {
+            echo '<div class="error-message">' . esc_html($response['message']) . '</div>';
+        }
+    }
+}
+
 // Get all teachers in the institution
 $teachers = get_users([
     'role' => 'mcq_teacher',
@@ -254,9 +308,40 @@ $revenue_stats = get_institution_revenue_stats($teacher_ids);
                         <div class="overview-section">
                             <h3>Quick Actions</h3>
                             <div class="quick-actions">
-                                <a href="<?php echo site_url('/wp-admin/user-new.php?role=mcq_teacher'); ?>" class="btn btn-primary">Add New Teacher</a>
+                                <button type="button" class="btn btn-primary" onclick="document.getElementById('add-teacher-modal').style.display='block'">Add New Teacher</button>
                                 <a href="#teachers" data-tab="teachers" class="btn btn-secondary">Manage Teachers</a>
                                 <a href="#quizzes" data-tab="quizzes" class="btn btn-secondary">View All Quizzes</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Add Teacher Modal -->
+                        <div id="add-teacher-modal" class="modal" style="display:none;">
+                            <div class="modal-content">
+                                <span class="close" onclick="document.getElementById('add-teacher-modal').style.display='none'">&times;</span>
+                                <h3>Add New Teacher</h3>
+                                <form id="add-teacher-form" method="post">
+                                    <div class="form-group">
+                                        <label for="teacher_username">Username *</label>
+                                        <input type="text" id="teacher_username" name="teacher_username" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="teacher_email">Email *</label>
+                                        <input type="email" id="teacher_email" name="teacher_email" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="teacher_first_name">First Name</label>
+                                        <input type="text" id="teacher_first_name" name="teacher_first_name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="teacher_last_name">Last Name</label>
+                                        <input type="text" id="teacher_last_name" name="teacher_last_name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="teacher_password">Password *</label>
+                                        <input type="password" id="teacher_password" name="teacher_password" required>
+                                    </div>
+                                    <button type="submit" name="add_teacher" class="btn btn-primary">Create Teacher Account</button>
+                                </form>
                             </div>
                         </div>
                     </div>

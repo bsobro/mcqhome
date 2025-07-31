@@ -140,6 +140,18 @@ $achievements = get_student_achievements($student_id);
         </div>
     </div>
 
+    <?php 
+    // Check if this is a pending institution
+    $approval_status = get_user_meta($user->ID, 'institution_approval_status', true);
+    if ($approval_status === 'pending' || isset($_GET['pending_institution'])): ?>
+    <div class="notice notice-info" style="max-width: 1200px; margin: 20px auto; padding: 15px 20px; background: #f8f9fa; border-left: 4px solid #007cba;">
+        <h3>🏛️ Institution Account Pending Approval</h3>
+        <p>Your institution account is currently under review by our admin team. You'll receive an email notification once it's approved.</p>
+        <p><strong>Current Status:</strong> You can access basic features as a student while waiting for approval.</p>
+        <p><strong>Next Steps:</strong> We'll notify you via email when your institution account is approved.</p>
+    </div>
+    <?php endif; ?>
+
     <div class="dashboard-content">
         <div class="container">
             <div class="dashboard-grid">

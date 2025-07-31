@@ -83,11 +83,18 @@ class MCQHome_Registration_Redirect {
      * Get dashboard URL based on user role
      */
     private function get_dashboard_url($user) {
+        // Check if user is an institution with pending approval
         if (in_array('mcq_institution', $user->roles)) {
             return home_url('/institution-dashboard');
         } elseif (in_array('mcq_teacher', $user->roles)) {
             return home_url('/teacher-dashboard');
         } elseif (in_array('mcq_student', $user->roles)) {
+            // Check if this is actually a pending institution
+            $approval_status = get_user_meta($user->ID, 'institution_approval_status', true);
+            if ($approval_status === 'pending') {
+                // Redirect to student dashboard with notice
+                return add_query_arg('pending_institution', '1', home_url('/student-dashboard'));
+            }
             return home_url('/student-dashboard');
         }
         
@@ -113,6 +120,11 @@ function mcqhome_get_dashboard_url($user_id = null) {
     } elseif (in_array('mcq_teacher', $user->roles)) {
         return home_url('/teacher-dashboard');
     } elseif (in_array('mcq_student', $user->roles)) {
+        // Check if this is actually a pending institution
+        $approval_status = get_user_meta($user_id, 'institution_approval_status', true);
+        if ($approval_status === 'pending') {
+            return add_query_arg('pending_institution', '1', home_url('/student-dashboard'));
+        }
         return home_url('/student-dashboard');
     }
     

@@ -217,6 +217,88 @@ const DashboardUtils = {
     }
 };
 
+// Modal functionality for adding teachers
+function setupTeacherModal() {
+    const modal = document.getElementById('add-teacher-modal');
+    const form = document.getElementById('add-teacher-form');
+    const closeBtn = document.querySelector('.close');
+    
+    if (!modal || !form) return;
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+    // Close modal with escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal.style.display === 'block') {
+            modal.style.display = 'none';
+        }
+    });
+    
+    // Form validation and AJAX submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('teacher_username').value.trim();
+        const email = document.getElementById('teacher_email').value.trim();
+        const password = document.getElementById('teacher_password').value.trim();
+        
+        if (!username || !email || !password) {
+            DashboardUtils.showNotification('Please fill in all required fields.', 'error');
+            return false;
+        }
+        
+        if (!isValidEmail(email)) {
+            DashboardUtils.showNotification('Please enter a valid email address.', 'error');
+            return false;
+        }
+        
+        if (password.length < 6) {
+            DashboardUtils.showNotification('Password must be at least 6 characters.', 'error');
+            return false;
+        }
+
+        // AJAX submission
+        const formData = new FormData(form);
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                DashboardUtils.showNotification('Teacher added successfully!', 'success');
+                modal.style.display = 'none';
+                form.reset();
+                // Optionally refresh teacher list
+                if (typeof refreshTeacherList === 'function') {
+                    refreshTeacherList();
+                }
+            } else {
+                DashboardUtils.showNotification(data.message || 'Error adding teacher', 'error');
+            }
+        })
+        .catch(error => {
+            DashboardUtils.showNotification('Network error occurred', 'error');
+        });
+    });
+}
+
+function isValidEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+// Initialize modal functionality when DOM is ready
+
+
 // Add CSS for animations
 const dashboardStyles = `
     .animate-in {
