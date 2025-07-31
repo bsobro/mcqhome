@@ -232,7 +232,19 @@ $revenue_stats = get_revenue_stats($teacher_id);
                                         
                                         <div class="quiz-stats">
                                             <div class="stat">
-                                                <span class="stat-value"><?php echo $this->get_quiz_enrollments(get_the_ID()); ?></span>
+                                                <span class="stat-value"><?php 
+                                                $enrollment_count = new WP_Query([
+                                                    'post_type' => 'enrollment',
+                                                    'meta_query' => [
+                                                        [
+                                                            'key' => 'quiz_id',
+                                                            'value' => get_the_ID(),
+                                                            'compare' => '='
+                                                        ]
+                                                    ]
+                                                ]);
+                                                echo $enrollment_count->found_posts;
+                                                ?></span>
                                                 <span class="stat-label">Enrollments</span>
                                             </div>
                                         </div>
@@ -262,22 +274,73 @@ $revenue_stats = get_revenue_stats($teacher_id);
                         
                         <div class="students-list">
                             <?php
-                            // Get all students enrolled in teacher's quizzes
-                            $students = $this->get_teacher_students($teacher_id);
+                            // Get students who enrolled in this teacher's quizzes
+                            $teacher_quizzes = get_posts([
+                                'post_type' => 'quiz',
+                                'author' => $teacher_id,
+                                'posts_per_page' => -1,
+                                'fields' => 'ids'
+                            ]);
                             
-                            if (!empty($students)) {
-                                foreach ($students as $student) {
-                                    ?>
-                                    <div class="student-item">
-                                        <div class="student-info">
-                                            <h4><?php echo $student->display_name; ?></h4>
-                                            <p><?php echo $student->user_email; ?></p>
+                            $student_ids = [];
+                            if (!empty($teacher_quizzes)) {
+                                $enrollments = new WP_Query([
+                                    'post_type' => 'enrollment',
+                                    'posts_per_page' => -1,
+                                    'meta_query' => [
+                                        [
+                                            'key' => 'quiz_id',
+                                            'value' => $teacher_quizzes,
+                                            'compare' => 'IN'
+                                        ]
+                                    ]
+                                ]);
+                                
+                                while ($enrollments->have_posts()) {
+                                    $enrollments->the_post();
+                                    $student_id = get_post_meta(get_the_ID(), 'student_id', true);
+                                    if ($student_id) {
+                                        $student_ids[] = $student_id;
+                                    }
+                                }
+                                wp_reset_postdata();
+                            }
+                            
+                            $student_ids = array_unique($student_ids);
+                            
+                            if (!empty($student_ids)) {
+                                foreach ($student_ids as $student_id) {
+                                    $student = get_userdata($student_id);
+                                    if ($student) {
+                                        // Count enrollments for this student in teacher's quizzes
+                                        $enrollment_count = new WP_Query([
+                                            'post_type' => 'enrollment',
+                                            'meta_query' => [
+                                                [
+                                                    'key' => 'student_id',
+                                                    'value' => $student_id,
+                                                    'compare' => '='
+                                                ],
+                                                [
+                                                    'key' => 'quiz_id',
+                                                    'value' => $teacher_quizzes,
+                                                    'compare' => 'IN'
+                                                ]
+                                            ]
+                                        ]);
+                                        ?>
+                                        <div class="student-item">
+                                            <div class="student-info">
+                                                <h4><?php echo $student->display_name; ?></h4>
+                                                <p><?php echo $student->user_email; ?></p>
+                                            </div>
+                                            <div class="student-stats">
+                                                <span><?php echo $enrollment_count->found_posts; ?> enrollments</span>
+                                            </div>
                                         </div>
-                                        <div class="student-stats">
-                                            <span><?php echo $student->enrollment_count; ?> enrollments</span>
-                                        </div>
-                                    </div>
-                                    <?php
+                                        <?php
+                                        wp_reset_postdata();
+                                    }
                                 }
                             } else {
                                 echo '<p>No students enrolled yet.</p>';
