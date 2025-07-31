@@ -18,6 +18,9 @@ if (!in_array('mcq_institution', $user->roles)) {
 
 $institution_id = $user->ID;
 
+// Include registration redirect functions
+require_once get_template_directory() . '/registration-redirect.php';
+
 // Get all teachers in the institution
 $teachers = get_users([
     'role' => 'mcq_teacher',
@@ -147,6 +150,7 @@ $revenue_stats = get_institution_revenue_stats($teacher_ids);
         <div class="container">
             <h1>Institution Dashboard</h1>
             <p>Welcome, <?php echo esc_html($user->display_name); ?></p>
+            <?php mcqhome_dashboard_navigation(); ?>
         </div>
     </div>
 

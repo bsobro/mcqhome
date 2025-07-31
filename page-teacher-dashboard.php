@@ -18,6 +18,9 @@ if (!in_array('mcq_teacher', $user->roles)) {
 
 $teacher_id = $user->ID;
 
+// Include registration redirect functions
+require_once get_template_directory() . '/registration-redirect.php';
+
 // Get teacher's quizzes
 $quizzes = new WP_Query([
     'post_type' => 'quiz',
@@ -100,6 +103,7 @@ $revenue_stats = get_revenue_stats($teacher_id);
         <div class="container">
             <h1>Teacher Dashboard</h1>
             <p>Welcome, <?php echo esc_html($user->display_name); ?></p>
+            <?php mcqhome_dashboard_navigation(); ?>
         </div>
     </div>
 

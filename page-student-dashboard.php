@@ -18,6 +18,9 @@ if (!in_array('mcq_student', $user->roles)) {
 
 $student_id = $user->ID;
 
+// Include registration redirect functions
+require_once get_template_directory() . '/registration-redirect.php';
+
 // Get student's enrollments
 $enrollments = new WP_Query([
     'post_type' => 'enrollment',
@@ -95,6 +98,7 @@ $achievements = get_student_achievements($student_id);
         <div class="container">
             <h1>Student Dashboard</h1>
             <p>Welcome back, <?php echo esc_html($user->display_name); ?></p>
+            <?php mcqhome_dashboard_navigation(); ?>
         </div>
     </div>
 

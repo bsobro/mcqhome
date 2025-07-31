@@ -7,9 +7,10 @@ require_once get_template_directory() . '/quiz-management.php';
 
 // Include roles system
 require_once get_template_directory() . '/roles-system.php';
+$roles_system = new MCQHome_Roles_System();
 
-// Initialize roles system
-new MCQHome_Roles_System();
+// Include registration redirect system
+require_once get_template_directory() . '/registration-redirect.php';
 
 // Include quiz AJAX handlers
 require_once get_template_directory() . '/quiz-ajax.php';
@@ -36,7 +37,9 @@ function mcqhome_enqueue()
 {
   wp_enqueue_style('mcqhome-style', get_stylesheet_uri(), [], wp_get_theme()->get('Version'));
   wp_enqueue_style('mcqhome-login', get_template_directory_uri() . '/login.css');
+  wp_enqueue_style('mcqhome-dashboard', get_template_directory_uri() . '/dashboard-styles.css', [], '1.0.0');
   wp_enqueue_script('mcqhome-header', get_template_directory_uri() . '/js/header.js', [], '1.0.0', true);
+  wp_enqueue_script('mcqhome-dashboard', get_template_directory_uri() . '/js/dashboard.js', ['jquery'], '1.0.0', true);
   
   // Enqueue quiz management scripts
     wp_enqueue_style('quiz-management', get_template_directory_uri() . '/quiz-management.css', [], '1.0.0');

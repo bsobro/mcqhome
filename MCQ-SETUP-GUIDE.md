@@ -52,6 +52,53 @@ Create the following pages and assign the appropriate templates:
    - Add shortcode: `[my_quizzes]`
    - URL: `/my-quizzes`
 
+#### Registration Redirect System
+The theme now includes automatic registration redirects based on user roles:
+
+- **Students** are redirected to `/student-dashboard`
+- **Teachers** are redirected to `/teacher-dashboard`
+- **Institutions** are redirected to `/institution-dashboard`
+
+This happens automatically after registration and first login.
+
+#### Dashboard Navigation Features
+Each dashboard includes:
+- **Responsive navigation menu** with role-specific links
+- **Tab-based content organization** for better UX
+- **Quick action buttons** for common tasks
+- **Mobile-friendly design** with collapsible sidebar
+- **Keyboard shortcuts** (Ctrl+1, Ctrl+2, Ctrl+3 for quick navigation)
+
+#### Testing Registration Flow
+1. **Register a new student account** - should redirect to student dashboard
+2. **Register a new teacher account** - should redirect to teacher dashboard
+3. **Register a new institution account** - should redirect to institution dashboard
+4. **Test login redirects** - first login after registration should redirect to appropriate dashboard
+
+#### Dashboard Navigation Links
+**Student Dashboard Links:**
+- Dashboard Overview
+- My Quizzes
+- Browse Quizzes
+- Achievements
+- Profile Settings
+
+**Teacher Dashboard Links:**
+- Dashboard Overview
+- My Quizzes
+- Create New Quiz
+- Students
+- Analytics
+- Settings
+
+**Institution Dashboard Links:**
+- Overview
+- Manage Teachers
+- All Quizzes
+- All Students
+- Analytics
+- Settings
+
 ### 4. WordPress Settings
 
 #### Permalinks
