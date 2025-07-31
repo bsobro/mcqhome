@@ -18,9 +18,6 @@ if (!in_array('mcq_teacher', $user->roles)) {
 
 $teacher_id = $user->ID;
 
-// Include registration redirect functions
-require_once get_template_directory() . '/registration-redirect.php';
-
 // Get teacher's quizzes
 $quizzes = new WP_Query([
     'post_type' => 'quiz',
@@ -29,72 +26,9 @@ $quizzes = new WP_Query([
     'post_status' => 'any'
 ]);
 
-// Get enrollment statistics
-function get_enrollment_stats($teacher_id) {
-    $quizzes = get_posts([
-        'post_type' => 'quiz',
-        'author' => $teacher_id,
-        'posts_per_page' => -1,
-        'fields' => 'ids'
-    ]);
-    
-    if (empty($quizzes)) return ['total' => 0, 'active' => 0];
-    
-    $enrollments = new WP_Query([
-        'post_type' => 'enrollment',
-        'posts_per_page' => -1,
-        'meta_query' => [
-            [
-                'key' => 'quiz_id',
-                'value' => $quizzes,
-                'compare' => 'IN'
-            ]
-        ]
-    ]);
-    
-    return [
-        'total' => $enrollments->found_posts,
-        'active' => $enrollments->found_posts
-    ];
-}
-
-function get_revenue_stats($teacher_id) {
-    $quizzes = get_posts([
-        'post_type' => 'quiz',
-        'author' => $teacher_id,
-        'posts_per_page' => -1,
-        'meta_query' => [
-            [
-                'key' => '_quiz_type',
-                'value' => 'paid',
-                'compare' => '='
-            ]
-        ]
-    ]);
-    
-    $total_revenue = 0;
-    foreach ($quizzes as $quiz) {
-        $price = get_post_meta($quiz->ID, '_quiz_price', true);
-        $enrollments = new WP_Query([
-            'post_type' => 'enrollment',
-            'meta_query' => [
-                [
-                    'key' => 'quiz_id',
-                    'value' => $quiz->ID,
-                    'compare' => '='
-                ]
-            ]
-        ]);
-        
-        $total_revenue += floatval($price) * $enrollments->found_posts;
-    }
-    
-    return $total_revenue;
-}
-
 // Get enrollment and revenue stats
-$enrollment_stats = get_enrollment_stats($teacher_id);
-$revenue_stats = get_revenue_stats($teacher_id);
+$enrollment_stats = mcqhome_get_teacher_enrollment_stats($teacher_id);
+$revenue_stats = mcqhome_get_teacher_revenue_stats($teacher_id);
 
 ?>
 

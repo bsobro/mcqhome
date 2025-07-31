@@ -18,9 +18,6 @@ if (!in_array('mcq_student', $user->roles)) {
 
 $student_id = $user->ID;
 
-// Include registration redirect functions
-require_once get_template_directory() . '/registration-redirect.php';
-
 // Get student's enrollments
 $enrollments = new WP_Query([
     'post_type' => 'enrollment',
@@ -63,33 +60,7 @@ $completed_quizzes = array_filter($enrolled_quizzes, function($item) {
 });
 
 // Get student's achievements
-function get_student_achievements($student_id) {
-    $achievements = [];
-    
-    // Get badges from gamification system
-    $badges = get_user_meta($student_id, 'earned_badges', true);
-    if ($badges) {
-        $achievements = array_merge($achievements, $badges);
-    }
-    
-    // Get total points
-    $total_points = get_user_meta($student_id, 'total_points', true) ?: 0;
-    
-    return [
-        'badges' => $achievements,
-        'total_points' => $total_points,
-        'level' => calculate_student_level($total_points)
-    ];
-}
-
-function calculate_student_level($points) {
-    if ($points < 100) return 'Beginner';
-    if ($points < 500) return 'Intermediate';
-    if ($points < 1000) return 'Advanced';
-    return 'Expert';
-}
-
-$achievements = get_student_achievements($student_id);
+$achievements = mcqhome_get_student_achievements($student_id);
 
 ?>
 

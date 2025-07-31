@@ -14,6 +14,209 @@ $institution_approval = new MCQHome_Institution_Approval();
 // Include registration redirect system
 require_once get_template_directory() . '/registration-redirect.php';
 
+/**
+ * Get student's achievements
+ */
+function mcqhome_get_student_achievements($student_id) {
+    $achievements = [];
+    
+    // Get badges from gamification system
+    $badges = get_user_meta($student_id, 'earned_badges', true);
+    if ($badges) {
+        $achievements = array_merge($achievements, $badges);
+    }
+    
+    // Get total points
+    $total_points = get_user_meta($student_id, 'total_points', true) ?: 0;
+    
+    return [
+        'badges' => $achievements,
+        'total_points' => $total_points,
+        'level' => mcqhome_calculate_student_level($total_points)
+    ];
+}
+
+/**
+ * Calculate student level based on points
+ */
+function mcqhome_calculate_student_level($points) {
+    if ($points < 100) return 'Beginner';
+    if ($points < 500) return 'Intermediate';
+    if ($points < 1000) return 'Advanced';
+    return 'Expert';
+}
+
+/**
+ * Get enrollment statistics for a teacher
+ */
+function mcqhome_get_teacher_enrollment_stats($teacher_id) {
+    $quizzes = get_posts([
+        'post_type' => 'quiz',
+        'author' => $teacher_id,
+        'posts_per_page' => -1,
+        'fields' => 'ids'
+    ]);
+    
+    if (empty($quizzes)) return ['total' => 0, 'active' => 0];
+    
+    $enrollments = new WP_Query([
+        'post_type' => 'enrollment',
+        'posts_per_page' => -1,
+        'meta_query' => [
+            [
+                'key' => 'quiz_id',
+                'value' => $quizzes,
+                'compare' => 'IN'
+            ]
+        ]
+    ]);
+    
+    return [
+        'total' => $enrollments->found_posts,
+        'active' => $enrollments->found_posts
+    ];
+}
+
+/**
+ * Get revenue statistics for a teacher
+ */
+function mcqhome_get_teacher_revenue_stats($teacher_id) {
+    $quizzes = get_posts([
+        'post_type' => 'quiz',
+        'author' => $teacher_id,
+        'posts_per_page' => -1,
+        'meta_query' => [
+            [
+                'key' => '_quiz_type',
+                'value' => 'paid',
+                'compare' => '='
+            ]
+        ]
+    ]);
+    
+    $total_revenue = 0;
+    foreach ($quizzes as $quiz) {
+        $price = get_post_meta($quiz->ID, '_quiz_price', true);
+        $enrollments = new WP_Query([
+            'post_type' => 'enrollment',
+            'meta_query' => [
+                [
+                    'key' => 'quiz_id',
+                    'value' => $quiz->ID,
+                    'compare' => '='
+                ]
+            ]
+        ]);
+        
+        $total_revenue += floatval($price) * $enrollments->found_posts;
+    }
+    
+    return $total_revenue;
+}
+
+/**
+ * Get enrollment statistics for an institution
+ */
+function mcqhome_get_institution_enrollment_stats($teacher_ids) {
+    $quizzes = get_posts([
+        'post_type' => 'quiz',
+        'author__in' => $teacher_ids,
+        'posts_per_page' => -1,
+        'fields' => 'ids'
+    ]);
+    
+    if (empty($quizzes)) return ['total' => 0, 'active' => 0, 'completed' => 0];
+    
+    $enrollments = new WP_Query([
+        'post_type' => 'enrollment',
+        'posts_per_page' => -1,
+        'meta_query' => [
+            [
+                'key' => 'quiz_id',
+                'value' => $quizzes,
+                'compare' => 'IN'
+            ]
+        ]
+    ]);
+    
+    $active_enrollments = new WP_Query([
+        'post_type' => 'enrollment',
+        'posts_per_page' => -1,
+        'meta_query' => [
+            [
+                'key' => 'quiz_id',
+                'value' => $quizzes,
+                'compare' => 'IN'
+            ],
+            [
+                'key' => 'status',
+                'value' => 'enrolled',
+                'compare' => '='
+            ]
+        ]
+    ]);
+    
+    $completed_enrollments = new WP_Query([
+        'post_type' => 'enrollment',
+        'posts_per_page' => -1,
+        'meta_query' => [
+            [
+                'key' => 'quiz_id',
+                'value' => $quizzes,
+                'compare' => 'IN'
+            ],
+            [
+                'key' => 'status',
+                'value' => 'completed',
+                'compare' => '='
+            ]
+        ]
+    ]);
+    
+    return [
+        'total' => $enrollments->found_posts,
+        'active' => $active_enrollments->found_posts,
+        'completed' => $completed_enrollments->found_posts
+    ];
+}
+
+/**
+ * Get revenue statistics for an institution
+ */
+function mcqhome_get_institution_revenue_stats($teacher_ids) {
+    $quizzes = get_posts([
+        'post_type' => 'quiz',
+        'author__in' => $teacher_ids,
+        'posts_per_page' => -1,
+        'meta_query' => [
+            [
+                'key' => '_quiz_type',
+                'value' => 'paid',
+                'compare' => '='
+            ]
+        ]
+    ]);
+    
+    $total_revenue = 0;
+    foreach ($quizzes as $quiz) {
+        $price = get_post_meta($quiz->ID, '_quiz_price', true);
+        $enrollments = new WP_Query([
+            'post_type' => 'enrollment',
+            'meta_query' => [
+                [
+                    'key' => 'quiz_id',
+                    'value' => $quiz->ID,
+                    'compare' => '='
+                ]
+            ]
+        ]);
+        
+        $total_revenue += floatval($price) * $enrollments->found_posts;
+    }
+    
+    return $total_revenue;
+}
+
 // Include quiz AJAX handlers
 require_once get_template_directory() . '/quiz-ajax.php';
 
