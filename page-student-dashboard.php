@@ -60,8 +60,6 @@ $completed_quizzes = array_filter($enrolled_quizzes, function($item) {
 });
 
 // Get student's achievements
-$achievements = $this->get_student_achievements($student_id);
-
 function get_student_achievements($student_id) {
     $achievements = [];
     
@@ -77,7 +75,7 @@ function get_student_achievements($student_id) {
     return [
         'badges' => $achievements,
         'total_points' => $total_points,
-        'level' => $this->calculate_student_level($total_points)
+        'level' => calculate_student_level($total_points)
     ];
 }
 
@@ -87,6 +85,8 @@ function calculate_student_level($points) {
     if ($points < 1000) return 'Advanced';
     return 'Expert';
 }
+
+$achievements = get_student_achievements($student_id);
 
 ?>
 

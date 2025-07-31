@@ -11,7 +11,7 @@ if (!is_user_logged_in()) {
 }
 
 $user = wp_get_current_user();
-if (!in_array('mcq_teacher', $user->roles) && !in_array('mcq_institution', $user->roles)) {
+if (!in_array('mcq_teacher', $user->roles)) {
     wp_redirect(home_url());
     exit;
 }
@@ -27,11 +27,6 @@ $quizzes = new WP_Query([
 ]);
 
 // Get enrollment statistics
-$enrollment_stats = $this->get_enrollment_stats($teacher_id);
-
-// Get revenue statistics
-$revenue_stats = $this->get_revenue_stats($teacher_id);
-
 function get_enrollment_stats($teacher_id) {
     $quizzes = get_posts([
         'post_type' => 'quiz',
@@ -93,6 +88,10 @@ function get_revenue_stats($teacher_id) {
     
     return $total_revenue;
 }
+
+// Get enrollment and revenue stats
+$enrollment_stats = get_enrollment_stats($teacher_id);
+$revenue_stats = get_revenue_stats($teacher_id);
 
 ?>
 

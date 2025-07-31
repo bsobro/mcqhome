@@ -38,12 +38,16 @@ Create the following pages and assign the appropriate templates:
    - URL: `/student-dashboard`
    - Access: Students only
 
-3. **Quizzes Catalog** (Page with shortcode)
+3. **Institution Dashboard** (Page Template: `Institution Dashboard`)
+   - URL: `/institution-dashboard`
+   - Access: Institutions only
+
+4. **Quizzes Catalog** (Page with shortcode)
    - Create a new page
    - Add shortcode: `[quiz_catalog]`
    - URL: `/quizzes`
 
-4. **My Quizzes** (Page with shortcode)
+5. **My Quizzes** (Page with shortcode)
    - Create a new page
    - Add shortcode: `[my_quizzes]`
    - URL: `/my-quizzes`
